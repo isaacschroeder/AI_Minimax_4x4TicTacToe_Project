@@ -37,28 +37,6 @@ class Game:
         self.p1_tile = Tile.X
         self.p2_tile = Tile.O
 
-        # Initialize evaluation metrics
-        self.two_sequential_two_open_sides_p1 = 0
-        self.two_sequential_one_open_side_p1 = 0
-        self.three_sequential_two_open_sides_p1 = 0
-        self.three_sequential_one_open_side_p1 = 0
-        self.two_sequential_two_open_sides_p2 = 0
-        self.two_sequential_one_open_side_p2 = 0
-        self.three_sequential_two_open_sides_p2 = 0
-        self.three_sequential_one_open_side_p2 = 0
-
-        #Whether there has been a win or not
-        self.win = 0
-
-
-    def updateEvalMetrics(self, friendly_tile, row, col):
-        #Check above
-        if row - 1 >= 0 and self.board[row - 1][col] == friendly_tile:
-            if row - 2 >= 0 and self.board[row - 2][col] == friendly_tile:
-                if (row - 3 >= 0 and self.board[row - 3][col] == friendly_tile) or \
-                (row + 1 < self.row_count and self.board[row + 1][col] == friendly_tile):
-                    self.win += 1
-
     # "Successor function: a player may place a piece at any
     # empty space next to an existing piece horizontally,
     # vertically, or diagonally on the board."
@@ -66,11 +44,8 @@ class Game:
     def makePlay(self, player, position):
         if player == Player.PLAYER_1:
             self.board[position.row][position.col] = self.p1_tile
-            updateEvalMetrics(self, self.p1_tile, position.row, position.col)
         else:
             self.board[position.row][position.col] = self.p2_tile
-            updateEvalMetrics(self, self.p2_tile, position.row, position.col)
-
 
     def getBoard(self):
         return self.board
@@ -103,7 +78,15 @@ def minimaxDesicion(game_board_state, current_player):
     pass
 
 def evaluator(game_board_state, current_player):
-    pass
+    # Initialize evaluation metrics
+    two_sequential_two_open_sides_p1 = 0
+    two_sequential_one_open_side_p1 = 0
+    three_sequential_two_open_sides_p1 = 0
+    three_sequential_one_open_side_p1 = 0
+    two_sequential_two_open_sides_p2 = 0
+    two_sequential_one_open_side_p2 = 0
+    three_sequential_two_open_sides_p2 = 0
+    three_sequential_one_open_side_p2 = 0
 
 def main():
     game = Game()
