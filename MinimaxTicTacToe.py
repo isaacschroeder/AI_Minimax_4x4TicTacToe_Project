@@ -1,7 +1,7 @@
 # CS4750 HW4
 
 from enum import Enum
-
+import copy
 
 class Tile(Enum):
     EMPTY = 0
@@ -96,9 +96,59 @@ class Game:
             print(row_string)
             print("_________________________")
 
+    # Returns a copy of this game object with the given move applied
+    def generateResultOfPlay(self, player, position):
+        result = copy.deepcopy(self)
+        result.makePlay(player, position)
+        return result
+
+    # Returns a list of successors to this game object based on all the possible movements
+    def generateSuccessors(self, player):
+        positions_list = self.generatePossiblePlays()
+        successors = []
+        for position in positions_list:
+            successors.append(self.generateResultOfPlay(player, position))
+
 # Returns position for best move to make based on current player
-def minimaxDesicion(game_board_state, current_player):
-    pass
+def minimaxDecision(game, player, maxDepth):
+    # generate list of possible positions to play
+    positions_list = game.generatePossiblePlays()
+    # run min-value function on each resulting game board generated from all possible actions
+    best_position = None
+    best_position_value = None
+    for position in positions_list:
+        result = minValue(game.generateResultOfPlay(player, position), player, 1, maxDepth)
+        if best_position_value is None or best_position_value > result:
+            best_position = position
+            best_position_value = result
+    # return the action associated with the maximum evaluated value out of the min-value function calls
+    return best_position
+    # REMEMBER TO CONSIDER TIE BREAKS! "Break ties based on left to right and top to bottom order."
+
+def minValue(game, player, depth, maxDepth):
+    # cutoff depth
+    if depth == maxDepth:
+        return evaluator(game, player)
+    # generate successors list
+    successors = game.generateSuccessors(player)
+    value = None
+    for successorGame in successors:
+        result = maxValue(successorGame, player, depth + 1, maxDepth)
+        if value is None or value < result:
+            value = result
+    return value
+def maxValue(game, player, depth, maxDepth):
+    # cutoff depth
+    if depth == maxDepth:
+        return evaluator(game, player)
+    # generate successors list
+    successors = game.generateSuccessors(player)
+    value = None
+    for successorGame in successors:
+        result = minValue(successorGame, player, depth + 1, maxDepth)
+        if value is None or value > result:
+            value = result
+    return value
 
 def evaluator(game_board_state, current_player):
     # Initialize evaluation metrics
