@@ -119,7 +119,8 @@ class Game:
         for position in positions_list:
             successors.append(self.generateResultOfPlay(position))
 
-    def testMoveForWin(self, position):
+    #Returns true if the move results in a win
+    def doesMoveResultInWin(self, position):
         r = position.row
         c = position.col
         friendly_tile = None
@@ -127,11 +128,24 @@ class Game:
             friendly_tile = self.p1_tile
         else:
             friendly_tile = self.p2_tile
-        #vertical test
-        if r - 1 >= 0 and self.board[r-1][c] == friendly_tile:
-            pass
-        #horizontal test
-        #diagonal test
+        # Vertical test - look for 4 sequential in column that was played in
+        friendly_tiles_in_row = 0
+        for x in range(0, self.row_count - 1):
+            if self.board[x][c] == friendly_tile:
+                friendly_tiles_in_row += 1
+        if friendly_tiles_in_row == 5 or (friendly_tiles_in_row == 4 and \
+        (self.board[0][c] != friendly_tile or self.board[self.row_count-1][c] != friendly_tile)):
+            return True
+        # Horizontal test - look for 4 sequential in the column that was played in
+        friendly_tiles_in_col = 0
+        if self.board[r][2] == friendly_tile and self.board[r][3] == friendly_tile and \
+        (self.board[r][1] == friendly_tile and self.board[r][0] == friendly_tile) or \
+        (self.board[r][1] == friendly_tile and self.board[r][4] == friendly_tile) or \
+        (self.board[r][4] == friendly_tile and self.board[r][5] == friendly_tile):
+            return True
+        # Diagonal - STOPPING POINT
+
+        return False
 
 
 # Returns position for best move to make based on current player
