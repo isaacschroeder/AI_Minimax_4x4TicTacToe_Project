@@ -2,6 +2,7 @@
 
 from enum import Enum
 import copy
+import time
 
 class Tile(Enum):
     EMPTY = 0
@@ -134,14 +135,16 @@ class Game:
 
 
 # Returns position for best move to make based on current player
-def minimaxDecision(game, maxDepth):
+def minimaxDecision(game, maxDepth, totalGenerated):
     # generate list of possible positions to play
     positions_list = game.generatePossiblePlays()
+    #total nodes generated during this minimiax decision
+    totalGenerated += len(positions_list)
     # run min-value function on each resulting game board generated from all possible actions
     best_position = None
     best_position_value = None
     for position in positions_list:
-        result = minValue(game.generateResultOfPlay(position), 1, maxDepth)
+        result = minValue(game.generateResultOfPlay(position), 1, maxDepth, totalGenerated)
         if best_position_value is None or best_position_value > result:
             best_position = position
             best_position_value = result
@@ -149,27 +152,29 @@ def minimaxDecision(game, maxDepth):
     return best_position
     # REMEMBER TO CONSIDER TIE BREAKS! "Break ties based on left to right and top to bottom order."
 
-def minValue(game, depth, maxDepth):
+def minValue(game, depth, maxDepth, totalGenerated):
     # cutoff depth
     if depth == maxDepth:
         return evaluator(game)
     # generate successors list
     successors = game.generateSuccessors()
+    totalGenerated += len(successors)
     value = None
     for successorGame in successors:
-        result = maxValue(successorGame, depth + 1, maxDepth)
+        result = maxValue(successorGame, depth + 1, maxDepth, totalGenerated)
         if value is None or value < result:
             value = result
     return value
-def maxValue(game, depth, maxDepth):
+def maxValue(game, depth, maxDepth, totalGenerated):
     # cutoff depth
     if depth == maxDepth:
         return evaluator(game)
     # generate successors list
     successors = game.generateSuccessors()
+    totalGenerated += len(successors)
     value = None
     for successorGame in successors:
-        result = minValue(successorGame, depth + 1, maxDepth)
+        result = minValue(successorGame, depth + 1, maxDepth, totalGenerated)
         if value is None or value > result:
             value = result
     return value
@@ -189,13 +194,24 @@ def playTicTacToe(game):
     play = True
     isWinner = False
     while play:
-        playerOneMove = minimaxDecision(game, Player.PLAYER_1, 2)
+        totalGenerated = 0
+        playerOneMove = minimaxDecision(game, Player.PLAYER_1, 2, totalGenerated)
         print("Player 1 placed an X at %d,%d" % (playerOneMove.row+1, playerOneMove.col+1))
+        print("Player 1 generated %d nodes during their minimax search" % (totalGenerated))
         isWinner = game.makePlay(playerOneMove)
+        print(time.process_time())
         if isWinner:
             play = False
             print("Player 1 has won the game")
-        playerTwoMove = minimaxDecision(game, Player.PLAYER_2, 4)
+        totalGenerated = 0
+        playerTwoMove = minimaxDecision(game, Player.PLAYER_2, 4, totalGenerated)
+        print("Player 2 has placed an O at %d,%d" % (playerTwoMove.row+1, playerTwoMove.col+1))
+        print("Player 2 generated %d nodes during their minimax search" % (totalGenerated))
+        isWinner = game.makePlay(playerTwoMove)
+        print(time.process_time())
+        if isWinner:
+            play = False
+            print("Player 2 has won the game")
 
 
 def main():
