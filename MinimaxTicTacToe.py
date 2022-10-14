@@ -38,6 +38,12 @@ class Game:
         self.p1_tile = Tile.X
         self.p2_tile = Tile.O
 
+        # Current players turn tracker, always start with one
+        self.current_players_turn = Player.PLAYER_1
+
+        # Set to a certain player if they have won
+        self.winner = None
+
     # "Successor function: a player may place a piece at any
     # empty space next to an existing piece horizontally,
     # vertically, or diagonally on the board."
@@ -45,13 +51,16 @@ class Game:
     def generatePossiblePlays(self):
         return [Position(row,col) for row in range(1,self.row_count) for col in range(1,self.col_count) if self.board[row][col] == Tile.PLAYABLE]
 
-    def makePlay(self, player, position):
+    def makePlay(self, position):
         r = position.row
         c = position.col
-        if player == Player.PLAYER_1:
+        #set correct tile and alternate which players turn it is
+        if self.current_players_turn == Player.PLAYER_1:
             self.board[r][c] = self.p1_tile
+            self.current_players_turn = Player.PLAYER_2
         else:
             self.board[r][c] = self.p2_tile
+            self.current_players_turn = Player.PLAYER_1
 
         if self.board[r-1][c-1] == Tile.EMPTY and r>0 and c>0: #up and left
             self.board[r-1][c-1] = Tile.PLAYABLE
@@ -97,27 +106,42 @@ class Game:
             print("_________________________")
 
     # Returns a copy of this game object with the given move applied
-    def generateResultOfPlay(self, player, position):
+    def generateResultOfPlay(self, position):
         result = copy.deepcopy(self)
-        result.makePlay(player, position)
+        result.makePlay(position)
         return result
 
     # Returns a list of successors to this game object based on all the possible movements
-    def generateSuccessors(self, player):
+    def generateSuccessors(self):
         positions_list = self.generatePossiblePlays()
         successors = []
         for position in positions_list:
-            successors.append(self.generateResultOfPlay(player, position))
+            successors.append(self.generateResultOfPlay(position))
+
+    def testMoveForWin(self, position):
+        r = position.row
+        c = position.col
+        friendly_tile = None
+        if self.current_players_turn == Player.PLAYER_1:
+            friendly_tile = self.p1_tile
+        else:
+            friendly_tile = self.p2_tile
+        #vertical test
+        if r - 1 >= 0 and self.board[r-1][c] == friendly_tile:
+            pass
+        #horizontal test
+        #diagonal test
+
 
 # Returns position for best move to make based on current player
-def minimaxDecision(game, player, maxDepth):
+def minimaxDecision(game, maxDepth):
     # generate list of possible positions to play
     positions_list = game.generatePossiblePlays()
     # run min-value function on each resulting game board generated from all possible actions
     best_position = None
     best_position_value = None
     for position in positions_list:
-        result = minValue(game.generateResultOfPlay(player, position), player, 1, maxDepth)
+        result = minValue(game.generateResultOfPlay(position), 1, maxDepth)
         if best_position_value is None or best_position_value > result:
             best_position = position
             best_position_value = result
@@ -125,32 +149,32 @@ def minimaxDecision(game, player, maxDepth):
     return best_position
     # REMEMBER TO CONSIDER TIE BREAKS! "Break ties based on left to right and top to bottom order."
 
-def minValue(game, player, depth, maxDepth):
+def minValue(game, depth, maxDepth):
     # cutoff depth
     if depth == maxDepth:
-        return evaluator(game, player)
+        return evaluator(game)
     # generate successors list
-    successors = game.generateSuccessors(player)
+    successors = game.generateSuccessors()
     value = None
     for successorGame in successors:
-        result = maxValue(successorGame, player, depth + 1, maxDepth)
+        result = maxValue(successorGame, depth + 1, maxDepth)
         if value is None or value < result:
             value = result
     return value
-def maxValue(game, player, depth, maxDepth):
+def maxValue(game, depth, maxDepth):
     # cutoff depth
     if depth == maxDepth:
-        return evaluator(game, player)
+        return evaluator(game)
     # generate successors list
-    successors = game.generateSuccessors(player)
+    successors = game.generateSuccessors()
     value = None
     for successorGame in successors:
-        result = minValue(successorGame, player, depth + 1, maxDepth)
+        result = minValue(successorGame, depth + 1, maxDepth)
         if value is None or value > result:
             value = result
     return value
 
-def evaluator(game_board_state, current_player):
+def evaluator(game_board_state):
     # Initialize evaluation metrics
     two_sequential_two_open_sides_p1 = 0
     two_sequential_one_open_side_p1 = 0
