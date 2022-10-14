@@ -264,8 +264,6 @@ class Game:
                                 check.append((row+2)*10 + col)
                                 oneSideOpen3InARowX += 1
                         elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+3, col-1)) == Tile.PLAYABLE:
-                            print(row)
-                            print(col)
                             twoSideOpen2InARowX += 1
                         elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+3, col-1)) == Tile.PLAYABLE:
                             oneSideOpen2InARowX += 1
