@@ -139,7 +139,7 @@ def minimaxDecision(game, maxDepth, totalGenerated):
     # generate list of possible positions to play
     positions_list = game.generatePossiblePlays()
     #total nodes generated during this minimiax decision
-    totalGenerated += len(positions_list)
+    totalGenerated.count += len(positions_list)
     # run min-value function on each resulting game board generated from all possible actions
     best_position = None
     best_position_value = None
@@ -158,7 +158,7 @@ def minValue(game, depth, maxDepth, totalGenerated):
         return evaluator(game)
     # generate successors list
     successors = game.generateSuccessors()
-    totalGenerated += len(successors)
+    totalGenerated.count += len(successors)
     value = None
     for successorGame in successors:
         result = maxValue(successorGame, depth + 1, maxDepth, totalGenerated)
@@ -171,7 +171,7 @@ def maxValue(game, depth, maxDepth, totalGenerated):
         return evaluator(game)
     # generate successors list
     successors = game.generateSuccessors()
-    totalGenerated += len(successors)
+    totalGenerated.count += len(successors)
     value = None
     for successorGame in successors:
         result = minValue(successorGame, depth + 1, maxDepth, totalGenerated)
@@ -194,19 +194,22 @@ def playTicTacToe(game):
     play = True
     isWinner = False
     while play:
-        totalGenerated = 0
+        class TotalGenerated:
+            def __init__(self):
+                count = 0
+        totalGenerated = TotalGenerated()
         playerOneMove = minimaxDecision(game, Player.PLAYER_1, 2, totalGenerated)
         print("Player 1 placed an X at %d,%d" % (playerOneMove.row+1, playerOneMove.col+1))
-        print("Player 1 generated %d nodes during their minimax search" % (totalGenerated))
+        print("Player 1 generated %d nodes during their minimax search" % (totalGenerated.count))
         isWinner = game.makePlay(playerOneMove)
         print(time.process_time())
         if isWinner:
             play = False
             print("Player 1 has won the game")
-        totalGenerated = 0
+        totalGenerated = TotalGenerated()
         playerTwoMove = minimaxDecision(game, Player.PLAYER_2, 4, totalGenerated)
         print("Player 2 has placed an O at %d,%d" % (playerTwoMove.row+1, playerTwoMove.col+1))
-        print("Player 2 generated %d nodes during their minimax search" % (totalGenerated))
+        print("Player 2 generated %d nodes during their minimax search" % (totalGenerated.count))
         isWinner = game.makePlay(playerTwoMove)
         print(time.process_time())
         if isWinner:
