@@ -130,26 +130,26 @@ class Game:
                 if thisTile == Tile.O:
                     if self.getPlayAt(Position(row+1, col+2)) == Tile.O:
                         if self.getPlayAt(Position(row+1, col+3)) == Tile.O:
-                            if lastTile == Tile.EMPTY and self.getPlayAt(Position(row+1, col+4)) == Tile.EMPTY:
+                            if lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+1, col+4)) == Tile.PLAYABLE:
                                 twoSideOpen3InARowO += 1
-                            elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+1, col+4)) == Tile.EMPTY:
+                            elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+1, col+4)) == Tile.PLAYABLE:
                                 oneSideOpen3InARowO += 1
                             toggle += 1
-                        elif lastTile == Tile.EMPTY and self.getPlayAt(Position(row+1, col+3)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+1, col+3)) == Tile.PLAYABLE:
                             twoSideOpen2InARowO += 1
-                        elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+1, col+3)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+1, col+3)) == Tile.PLAYABLE:
                             oneSideOpen2InARowO += 1
                 elif thisTile == Tile.X:
                     if self.getPlayAt(Position(row+1, col+2)) == Tile.X:
                         if self.getPlayAt(Position(row+1, col+3)) == Tile.X:
-                            if lastTile == Tile.EMPTY and self.getPlayAt(Position(row+1, col+4)) == Tile.EMPTY:
+                            if lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+1, col+4)) == Tile.PLAYABLE:
                                 twoSideOpen3InARowX += 1
-                            elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+1, col+4)) == Tile.EMPTY:
+                            elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+1, col+4)) == Tile.PLAYABLE:
                                 oneSideOpen3InARowX += 1
                             toggle += 1
-                        elif lastTile == Tile.EMPTY and self.getPlayAt(Position(row+1, col+3)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+1, col+3)) == Tile.PLAYABLE:
                             twoSideOpen2InARowX += 1
-                        elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+1, col+3)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+1, col+3)) == Tile.PLAYABLE:
                             oneSideOpen2InARowX += 1
         toggle = 0
         for col in range(6):
@@ -162,33 +162,33 @@ class Game:
                 if thisTile == Tile.O:
                     if self.getPlayAt(Position(row+2, col+1)) == Tile.O:
                         if self.getPlayAt(Position(row+3, col+1)) == Tile.O:
-                            if lastTile == Tile.EMPTY and self.getPlayAt(Position(row+4, col+1)) == Tile.EMPTY:
+                            if lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+4, col+1)) == Tile.PLAYABLE:
                                 twoSideOpen3InARowO += 1
-                            elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+4, col+1)) == Tile.EMPTY:
+                            elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+4, col+1)) == Tile.PLAYABLE:
                                 oneSideOpen3InARowO += 1
                             toggle += 1
-                        elif lastTile == Tile.EMPTY and self.getPlayAt(Position(row+3, col+1)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+3, col+1)) == Tile.PLAYABLE:
                             twoSideOpen2InARowO += 1
-                        elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+3, col+1)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+3, col+1)) == Tile.PLAYABLE:
                             oneSideOpen2InARowO += 1
                 elif thisTile == Tile.X:
                     if self.getPlayAt(Position(row+2, col+1)) == Tile.X:
                         if self.getPlayAt(Position(row+3, col+1)) == Tile.X:
-                            if lastTile == Tile.EMPTY and self.getPlayAt(Position(row+4, col+1)) == Tile.EMPTY:
+                            if lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+4, col+1)) == Tile.PLAYABLE:
                                 twoSideOpen3InARowX += 1
-                            elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+4, col+1)) == Tile.EMPTY:
+                            elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+4, col+1)) == Tile.PLAYABLE:
                                 oneSideOpen3InARowX += 1
                             toggle += 1
-                        elif lastTile == Tile.EMPTY and self.getPlayAt(Position(row+3, col+1)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+3, col+1)) == Tile.PLAYABLE:
                             twoSideOpen2InARowX += 1
-                        elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+3, col+1)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+3, col+1)) == Tile.PLAYABLE:
                             oneSideOpen2InARowX += 1
         check = []
         row = 0
         while row < 5:
             col = 0
             while col < 5:
-                val = row*10 + col
+                val = (row+1)*10 + (col+1)
                 if val in check:
                     check.remove(val)
                     col += 1
@@ -198,32 +198,28 @@ class Game:
                 if thisTile == Tile.O:
                     if self.getPlayAt(Position(row+2, col+2)) == Tile.O:
                         if self.getPlayAt(Position(row+3, col+3)) == Tile.O:
-                            if lastTile == Tile.EMPTY and self.getPlayAt(Position(row+4, col+4)) == Tile.EMPTY:
+                            if lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+4, col+4)) == Tile.PLAYABLE:
                                 check.append((row+2)*10 + col)
-                                check.append((row+3)*10 + col - 1)
                                 twoSideOpen3InARowO += 1
-                            elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+4, col+4)) == Tile.EMPTY:
+                            elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+4, col+4)) == Tile.PLAYABLE:
                                 check.append((row+2)*10 + col)
-                                check.append((row+3)*10 + col - 1)
                                 oneSideOpen3InARowO += 1
-                        elif lastTile == Tile.EMPTY and self.getPlayAt(Position(row+3, col+3)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+3, col+3)) == Tile.PLAYABLE:
                             twoSideOpen2InARowO += 1
-                        elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+3, col+3)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+3, col+3)) == Tile.PLAYABLE:
                             oneSideOpen2InARowO += 1
                 elif thisTile == Tile.X:
                     if self.getPlayAt(Position(row+2, col+2)) == Tile.X:
                         if self.getPlayAt(Position(row+3, col+3)) == Tile.X:
-                            if lastTile == Tile.EMPTY and self.getPlayAt(Position(row+4, col+4)) == Tile.EMPTY:
+                            if lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+4, col+4)) == Tile.PLAYABLE:
                                 check.append((row+2)*10 + col)
-                                check.append((row+3)*10 + col - 1)
                                 twoSideOpen3InARowX += 1
-                            elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+4, col+4)) == Tile.EMPTY:
+                            elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+4, col+4)) == Tile.PLAYABLE:
                                 check.append((row+2)*10 + col)
-                                check.append((row+3)*10 + col - 1)
                                 oneSideOpen3InARowX += 1
-                        elif lastTile == Tile.EMPTY and self.getPlayAt(Position(row+3, col+3)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+3, col+3)) == Tile.PLAYABLE:
                             twoSideOpen2InARowX += 1
-                        elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+3, col+3)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+3, col+3)) == Tile.PLAYABLE:
                             oneSideOpen2InARowX += 1
                 col += 1
             row += 1
@@ -231,13 +227,10 @@ class Game:
         check = []
         row = 0
         while row < 5:
-            col = 2
+            col = 1
             while col < 6:
-                print(col)
-                val = row*10 + col
+                val = (row+1)*10 + (col+1)
                 if val in check:
-                    print(val)
-                    print(check)
                     check.remove(val)
                     col += 1
                     continue
@@ -246,46 +239,44 @@ class Game:
                 if thisTile == Tile.O:
                     if self.getPlayAt(Position(row+2, col)) == Tile.O:
                         if self.getPlayAt(Position(row+3, col-1)) == Tile.O:
-                            if lastTile == Tile.EMPTY and self.getPlayAt(Position(row+4, col-2)) == Tile.EMPTY:
+                            if lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+4, col-2)) == Tile.PLAYABLE:
                                 check.append((row+2)*10 + col)
-                                check.append((row+3)*10 + col - 1)
                                 twoSideOpen3InARowO += 1
-                            elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+4, col-2)) == Tile.EMPTY:
+                            elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+4, col-2)) == Tile.PLAYABLE:
                                 check.append((row+2)*10 + col)
-                                check.append((row+3)*10 + col - 1)
                                 oneSideOpen3InARowO += 1
-                        elif lastTile == Tile.EMPTY and self.getPlayAt(Position(row+3, col-1)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+3, col-1)) == Tile.PLAYABLE:
                             twoSideOpen2InARowO += 1
-                        elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+3, col-1)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+3, col-1)) == Tile.PLAYABLE:
                             oneSideOpen2InARowO += 1
                 elif thisTile == Tile.X:
                     if self.getPlayAt(Position(row+2, col)) == Tile.X:
                         if self.getPlayAt(Position(row+3, col-1)) == Tile.X:
-                            if lastTile == Tile.EMPTY and self.getPlayAt(Position(row+4, col-2)) == Tile.EMPTY:
+                            if lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+4, col-2)) == Tile.PLAYABLE:
                                 check.append((row+2)*10 + col)
-                                check.append((row+3)*10 + col - 1)
                                 twoSideOpen3InARowX += 1
-                            elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+4, col-2)) == Tile.EMPTY:
+                            elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+4, col-2)) == Tile.PLAYABLE:
                                 check.append((row+2)*10 + col)
-                                check.append((row+3)*10 + col - 1)
                                 oneSideOpen3InARowX += 1
-                        elif lastTile == Tile.EMPTY and self.getPlayAt(Position(row+3, col-1)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE and self.getPlayAt(Position(row+3, col-1)) == Tile.PLAYABLE:
                             print(row)
                             print(col)
                             twoSideOpen2InARowX += 1
-                        elif lastTile == Tile.EMPTY or self.getPlayAt(Position(row+3, col-1)) == Tile.EMPTY:
+                        elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row+3, col-1)) == Tile.PLAYABLE:
                             oneSideOpen2InARowX += 1
                 col += 1
             row += 1
-        print("twoSideOpen3InARowX: " + str(twoSideOpen3InARowX))
-        print("twoSideOpen3InARowO: " + str(twoSideOpen3InARowO))
-        print("oneSideOpen3InARowX: " + str(oneSideOpen3InARowX))
-        print("oneSideOpen3InARowO: " + str(oneSideOpen3InARowO))
-        print("twoSideOpen2InARowX: " + str(twoSideOpen2InARowX))
-        print("twoSideOpen2InARowO: " + str(twoSideOpen2InARowO))
-        print("oneSideOpen2InARowX: " + str(oneSideOpen2InARowX))
-        print("oneSideOpen2InARowO: " + str(oneSideOpen3InARowO))
-        return  200*twoSideOpen3InARowX - 80*twoSideOpen3InARowO + 150*oneSideOpen3InARowX - 40*oneSideOpen3InARowO + 20*twoSideOpen2InARowX - 15*twoSideOpen2InARowO + 5*oneSideOpen2InARowX - 2*oneSideOpen2InARowO
+        # print("twoSideOpen3InARowX: " + str(twoSideOpen3InARowX))
+        # print("twoSideOpen3InARowO: " + str(twoSideOpen3InARowO))
+        # print("oneSideOpen3InARowX: " + str(oneSideOpen3InARowX))
+        # print("oneSideOpen3InARowO: " + str(oneSideOpen3InARowO))
+        # print("twoSideOpen2InARowX: " + str(twoSideOpen2InARowX))
+        # print("twoSideOpen2InARowO: " + str(twoSideOpen2InARowO))
+        # print("oneSideOpen2InARowX: " + str(oneSideOpen2InARowX))
+        # print("oneSideOpen2InARowO: " + str(oneSideOpen3InARowO))
+        if self.getCurrentPlayersTile() == Tile.X:
+            return  200*twoSideOpen3InARowX - 80*twoSideOpen3InARowO + 150*oneSideOpen3InARowX - 40*oneSideOpen3InARowO + 20*twoSideOpen2InARowX - 15*twoSideOpen2InARowO + 5*oneSideOpen2InARowX - 2*oneSideOpen2InARowO
+        return  200*twoSideOpen3InARowO - 80*twoSideOpen3InARowX + 150*oneSideOpen3InARowO - 40*oneSideOpen3InARowX + 20*twoSideOpen2InARowO - 15*twoSideOpen2InARowX + 5*oneSideOpen2InARowO - 2*oneSideOpen2InARowX
 
 
 # Returns position for best move to make based on current player
@@ -378,17 +369,6 @@ def maxValue(game, depth, maxDepth, totalGenerated):
             value = result
     return value
 
-def evaluator(game_board_state):
-    # Initialize evaluation metrics
-    two_sequential_two_open_sides_p1 = 0
-    two_sequential_one_open_side_p1 = 0
-    three_sequential_two_open_sides_p1 = 0
-    three_sequential_one_open_side_p1 = 0
-    two_sequential_two_open_sides_p2 = 0
-    two_sequential_one_open_side_p2 = 0
-    three_sequential_two_open_sides_p2 = 0
-    three_sequential_one_open_side_p2 = 0
-
 def playTicTacToe(game):
     play = True
     isWinner = False
@@ -418,14 +398,10 @@ def playTicTacToe(game):
 
 def main():
     game = Game()
-    # game.makePlay(Player.PLAYER_1, Position(4, 1))
-    # game.makePlay(Player.PLAYER_1, Position(3, 2))
-    # game.makePlay(Player.PLAYER_1, Position(2, 3))
-    # game.makePlay(Player.PLAYER_2, Position(1, 2))
-    game.makePlay(Position(4, 2))
+    game.makePlay(Position(4, 3))
     game.makePlay(Position(3, 3))
     game.makePlay(Position(2, 5))
-    game.makePlay(Position(4, 3))
+    game.makePlay(Position(4, 2))
     game.makePlay(Position(3, 4))
     game.printBoard()
     print(game.getHeuristic())
