@@ -66,20 +66,20 @@ class Game:
 
         if self.board[r-1][c-1] == Tile.EMPTY and r>0 and c>0: #up and left
             self.board[r-1][c-1] = Tile.PLAYABLE
-        elif self.board[r-1][c] == Tile.EMPTY and r > 0: #up
-            self.board[r-1][c] == Tile.PLAYABLE
-        elif self.board[r-1][c+1] == Tile.EMPTY and r > 0 and c <=5: #up and right
-            self.board[r-1][c+1] == Tile.PLAYABLE
-        elif self.board[r][c-1] == Tile.EMPTY and c > 0: #left
-            self.board[r][c-1] == Tile.PLAYABLE
-        elif self.board[r][c+1] == Tile.EMPTY and c <= 5: #right
-            self.board[r][c+1] == Tile.PLAYABLE
-        elif self.board[r+1][c-1] == Tile.EMPTY and r <= 4 and c>0: #down and left
-            self.board[r+1][c-1] == Tile.PLAYABLE
-        elif self.board[r+1][c] == Tile.EMPTY and r <= 4: #down 
-            self.board[r+1][c] == Tile.PLAYABLE
-        elif self.board[r+1][c+1] == Tile.EMPTY and r <= 4 and c <=5: #down and right
-            self.board[r+1][c+1] == Tile.PLAYABLE
+        if self.board[r-1][c] == Tile.EMPTY and r > 0: #up
+            self.board[r-1][c] = Tile.PLAYABLE
+        if self.board[r-1][c+1] == Tile.EMPTY and r > 0 and c <=5: #up and right
+            self.board[r-1][c+1] = Tile.PLAYABLE
+        if self.board[r][c-1] == Tile.EMPTY and c > 0: #left
+            self.board[r][c-1] = Tile.PLAYABLE
+        if self.board[r][c+1] == Tile.EMPTY and c <= 5: #right
+            self.board[r][c+1] = Tile.PLAYABLE
+        if self.board[r+1][c-1] == Tile.EMPTY and r <= 4 and c>0: #down and left
+            self.board[r+1][c-1] = Tile.PLAYABLE
+        if self.board[r+1][c] == Tile.EMPTY and r <= 4: #down 
+            self.board[r+1][c] = Tile.PLAYABLE
+        if self.board[r+1][c+1] == Tile.EMPTY and r <= 4 and c <=5: #down and right
+            self.board[r+1][c+1] = Tile.PLAYABLE
 
     def getBoard(self):
         return self.board
