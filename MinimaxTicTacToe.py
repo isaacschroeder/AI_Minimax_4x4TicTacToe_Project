@@ -161,6 +161,19 @@ def evaluator(game_board_state, current_player):
     three_sequential_two_open_sides_p2 = 0
     three_sequential_one_open_side_p2 = 0
 
+def playTicTacToe(game):
+    play = True
+    isWinner = False
+    while play:
+        playerOneMove = minimaxDecision(game, Player.PLAYER_1, 2)
+        print("Player 1 placed an X at %d,%d" % (playerOneMove.row+1, playerOneMove.col+1))
+        isWinner = game.makePlay(playerOneMove)
+        if isWinner:
+            play = False
+            print("Player 1 has won the game")
+        playerTwoMove = minimaxDecision(game, Player.PLAYER_2, 4)
+
+
 def main():
     game = Game()
     game.makePlay(Player.PLAYER_1, Position(3, 3))
