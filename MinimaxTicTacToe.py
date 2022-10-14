@@ -52,6 +52,11 @@ class Game:
     # Currently assumes valid play is made.
     def generatePossiblePlays(self):
         return [Position(row,col) for row in range(1,self.row_count) for col in range(1,self.col_count) if self.board[row][col] == Tile.PLAYABLE]
+    
+    def getCurrentPlayersTile(self):
+        if self.current_players_turn == Player.PLAYER_1:
+            return self.p1_tile
+        return self.p2_tile
 
     def makePlay(self, position):
         r = position.row
