@@ -61,30 +61,43 @@ class Game:
     def makePlay(self, position):
         r = position.row
         c = position.col
+
         #set correct tile and alternate which players turn it is
         if self.current_players_turn == Player.PLAYER_1:
             self.board[r][c] = self.p1_tile
-            self.current_players_turn = Player.PLAYER_2
         else:
             self.board[r][c] = self.p2_tile
+
+        # ***Bounds checks were too late here, fixed to where bounds checks now occur before operating on array
+        if r > 0 and c > 0 and self.board[r-1][c-1] == Tile.EMPTY: #up and left
+            self.board[r-1][c-1] = Tile.PLAYABLE
+        if r > 0 and self.board[r-1][c] == Tile.EMPTY: #up
+            self.board[r-1][c] = Tile.PLAYABLE
+        if r > 0 and c < 5 and self.board[r-1][c+1] == Tile.EMPTY: #up and right    NOTE REMOVED <= FOR < IN c <5
+            self.board[r-1][c+1] = Tile.PLAYABLE
+        if c > 0 and self.board[r][c-1] == Tile.EMPTY: #left
+            self.board[r][c-1] = Tile.PLAYABLE
+        if c < 5 and self.board[r][c+1] == Tile.EMPTY: #right                       NOTE REMOVED <= FOR < IN c <5
+            self.board[r][c+1] = Tile.PLAYABLE
+        if r < 4 and c>0 and self.board[r+1][c-1] == Tile.EMPTY: #down and left     NOTE REMOVED <= FOR < IN r <4
+            self.board[r+1][c-1] = Tile.PLAYABLE
+        if r < 4 and self.board[r+1][c] == Tile.EMPTY: #down                        NOTE REMOVED <= FOR < IN r <4
+            self.board[r+1][c] = Tile.PLAYABLE
+        if r < 4 and c < 5 and self.board[r+1][c+1] == Tile.EMPTY: #down and right NOTE REMOVED <= FOR < IN c <5 and r <4
+            self.board[r+1][c+1] = Tile.PLAYABLE
+
+        # determine if this move wins it for the current player BEFORE swapping current player
+        if self.doesMoveResultInWin(position):
+            self.winner = self.current_players_turn
+
+        # swap current player
+        if self.current_players_turn == Player.PLAYER_1:
+            self.current_players_turn = Player.PLAYER_2
+        else:
             self.current_players_turn = Player.PLAYER_1
 
-        if self.board[r-1][c-1] == Tile.EMPTY and r>0 and c>0: #up and left
-            self.board[r-1][c-1] = Tile.PLAYABLE
-        if self.board[r-1][c] == Tile.EMPTY and r > 0: #up
-            self.board[r-1][c] = Tile.PLAYABLE
-        if self.board[r-1][c+1] == Tile.EMPTY and r > 0 and c <=5: #up and right
-            self.board[r-1][c+1] = Tile.PLAYABLE
-        if self.board[r][c-1] == Tile.EMPTY and c > 0: #left
-            self.board[r][c-1] = Tile.PLAYABLE
-        if self.board[r][c+1] == Tile.EMPTY and c <= 5: #right
-            self.board[r][c+1] = Tile.PLAYABLE
-        if self.board[r+1][c-1] == Tile.EMPTY and r <= 4 and c>0: #down and left
-            self.board[r+1][c-1] = Tile.PLAYABLE
-        if self.board[r+1][c] == Tile.EMPTY and r <= 4: #down 
-            self.board[r+1][c] = Tile.PLAYABLE
-        if self.board[r+1][c+1] == Tile.EMPTY and r <= 4 and c <=5: #down and right
-            self.board[r+1][c+1] = Tile.PLAYABLE
+
+        return self.winner is not None
 
     def getBoard(self):
         return self.board
@@ -278,13 +291,9 @@ class Game:
         # print("oneSideOpen2InARowX: " + str(oneSideOpen2InARowX))
         # print("oneSideOpen2InARowO: " + str(oneSideOpen3InARowO))
         if self.getCurrentPlayersTile() == Tile.X:
-            return  200*twoSideOpen3InARowX - 80*twoSideOpen3InARowO + 150*oneSideOpen3InARowX - 40*oneSideOpen3InARowO + 20*twoSideOpen2InARowX - 15*twoSideOpen2InARowO + 5*oneSideOpen2InARowX - 2*oneSideOpen2InARowO
-        return  200*twoSideOpen3InARowO - 80*twoSideOpen3InARowX + 150*oneSideOpen3InARowO - 40*oneSideOpen3InARowX + 20*twoSideOpen2InARowO - 15*twoSideOpen2InARowX + 5*oneSideOpen2InARowO - 2*oneSideOpen2InARowX
+            return 200*twoSideOpen3InARowX - 80*twoSideOpen3InARowO + 150*oneSideOpen3InARowX - 40*oneSideOpen3InARowO + 20*twoSideOpen2InARowX - 15*twoSideOpen2InARowO + 5*oneSideOpen2InARowX - 2*oneSideOpen2InARowO
+        return 200*twoSideOpen3InARowO - 80*twoSideOpen3InARowX + 150*oneSideOpen3InARowO - 40*oneSideOpen3InARowX + 20*twoSideOpen2InARowO - 15*twoSideOpen2InARowX + 5*oneSideOpen2InARowO - 2*oneSideOpen2InARowX
 
-
-# Returns position for best move to make based on current player
-def minimaxDesicion(game_board_state, current_player):
-    pass
     # Returns a copy of this game object with the given move applied
     def generateResultOfPlay(self, position):
         result = copy.deepcopy(self)
@@ -309,21 +318,48 @@ def minimaxDesicion(game_board_state, current_player):
             friendly_tile = self.p2_tile
         # Vertical test - look for 4 sequential in column that was played in
         friendly_tiles_in_row = 0
-        for x in range(0, self.row_count - 1):
+        for x in range(0, self.row_count):
             if self.board[x][c] == friendly_tile:
                 friendly_tiles_in_row += 1
         if friendly_tiles_in_row == 5 or (friendly_tiles_in_row == 4 and \
         (self.board[0][c] != friendly_tile or self.board[self.row_count-1][c] != friendly_tile)):
             return True
         # Horizontal test - look for 4 sequential in the column that was played in
-        friendly_tiles_in_col = 0
         if self.board[r][2] == friendly_tile and self.board[r][3] == friendly_tile and \
-        (self.board[r][1] == friendly_tile and self.board[r][0] == friendly_tile) or \
+        ((self.board[r][1] == friendly_tile and self.board[r][0] == friendly_tile) or \
         (self.board[r][1] == friendly_tile and self.board[r][4] == friendly_tile) or \
-        (self.board[r][4] == friendly_tile and self.board[r][5] == friendly_tile):
+        (self.board[r][4] == friendly_tile and self.board[r][5] == friendly_tile)):
             return True
-        # Diagonal - STOPPING POINT
-
+        # Diagonal - look for 4 sequential in the diagonal that was played in, uses sneaky shenanigans
+        # Positive sloped diagonal check - rule out if position in upper left and bottom right where these are impossible
+        diag_val = r + c
+        if diag_val > 2 and diag_val < 7:
+            friendly_tiles_in_row = 0
+            # Count tiles in positive diagonal
+            count_to = 4 if diag_val % 3 == 0 else 5
+            start_r = 3 if diag_val == 3 else 4
+            start_c = diag_val - 4 if diag_val > 4 else 0
+            for i in range(0, count_to):
+                if self.board[start_r - i][start_c + i] == friendly_tile:
+                    friendly_tiles_in_row += 1
+            if (friendly_tiles_in_row == 5) or (friendly_tiles_in_row == 4 and ((diag_val == 3 or diag_val == 6) or \
+            (self.board[start_r][start_c] != friendly_tile or self.board[start_r - (count_to -1)][start_c + (count_to -1)] != friendly_tile))):
+                return True
+        # Negative sloped diagonal check - rule out if position in upper right and bottom left where these are impossible
+        diag_val = r - c
+        if diag_val < 2 and diag_val > -3:
+            #print("r: ", r, " c: ", c) *****
+            friendly_tiles_in_row = 0
+            # Count tiles in negative diagonal
+            count_to = 4 if (diag_val == 1 or diag_val == -2) else 5
+            start_r = 1 if diag_val == 1 else 0
+            start_c = 0 if diag_val == 1 else abs(diag_val)
+            for i in range(0, count_to):
+                if self.board[start_r + i][start_c + i] == friendly_tile:
+                    friendly_tiles_in_row += 1
+            if (friendly_tiles_in_row == 5) or (friendly_tiles_in_row == 4 and ((diag_val == 1 or diag_val == -2) or \
+            (self.board[start_r][start_c] != friendly_tile or self.board[start_r + (count_to -1)][start_c + (count_to -1)] != friendly_tile))):
+                return True
         return False
 
 
@@ -348,7 +384,7 @@ def minimaxDecision(game, maxDepth, totalGenerated):
 def minValue(game, depth, maxDepth, totalGenerated):
     # cutoff depth
     if depth == maxDepth:
-        return evaluator(game)
+        return game.getHeuristic()
     # generate successors list
     successors = game.generateSuccessors()
     totalGenerated.count += len(successors)
@@ -361,7 +397,7 @@ def minValue(game, depth, maxDepth, totalGenerated):
 def maxValue(game, depth, maxDepth, totalGenerated):
     # cutoff depth
     if depth == maxDepth:
-        return evaluator(game)
+        return game.getHeuristic()
     # generate successors list
     successors = game.generateSuccessors()
     totalGenerated.count += len(successors)
@@ -401,11 +437,14 @@ def playTicTacToe(game):
 
 def main():
     game = Game()
-    game.makePlay(Position(4, 3))
-    game.makePlay(Position(3, 3))
-    game.makePlay(Position(2, 5))
-    game.makePlay(Position(4, 2))
-    game.makePlay(Position(3, 4))
+    print(game.makePlay(Position(1, 3)))
+    print(game.makePlay(Position(5, 1)))
+    print(game.makePlay(Position(2, 4)))
+    print(game.makePlay(Position(5, 1)))
+    print(game.makePlay(Position(3, 2)))
+    print(game.makePlay(Position(5, 1)))
+    print(game.makePlay(Position(4, 6)))
+    print(game.makePlay(Position(5, 1)))
     game.printBoard()
     print(game.getHeuristic())
 
