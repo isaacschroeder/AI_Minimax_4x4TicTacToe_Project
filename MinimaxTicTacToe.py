@@ -471,7 +471,7 @@ def playTicTacToe(game, starting_move):
             playerOneMove = starting_move
             firstMove = False
         else:
-            playerOneMove = minimaxDecision(game, 4, totalGenerated)
+            playerOneMove = minimaxDecision(game, 2, totalGenerated)
         print("Player 1 placed an X at %d,%d" % (playerOneMove.row + 1, playerOneMove.col + 1))
         print("Player 1 generated %d nodes during their minimax search" % (totalGenerated.count))
         isWinner = game.makePlay(playerOneMove)
@@ -482,7 +482,7 @@ def playTicTacToe(game, starting_move):
             print("Player 1 has won the game")
             break
         totalGenerated = TotalGenerated()
-        playerTwoMove = minimaxDecision(game, 2, totalGenerated)
+        playerTwoMove = minimaxDecision(game, 4, totalGenerated)
         print("Player 2 has placed an O at %d,%d" % (playerTwoMove.row + 1, playerTwoMove.col + 1))
         print("Player 2 generated %d nodes during their minimax search" % (totalGenerated.count))
         isWinner = game.makePlay(playerTwoMove)
