@@ -458,7 +458,7 @@ def maxValue(game, callingPlayer, depth, maxDepth, totalGenerated):
     return value
 
 
-def playTicTacToe(game, starting_move):
+def playTicTacToe(game, p1_starting_move, p2_starting_move):
     play = True
     firstMove = True
     isWinner = False
@@ -471,8 +471,7 @@ def playTicTacToe(game, starting_move):
 
         totalGenerated = TotalGenerated()
         if firstMove:
-            playerOneMove = starting_move
-            firstMove = False
+            playerOneMove = p1_starting_move
         else:
             timeStart = time.process_time()
             playerOneMove = minimaxDecision(game, 2, totalGenerated)
@@ -487,9 +486,13 @@ def playTicTacToe(game, starting_move):
             print("Player 1 has won the game")
             break
         totalGenerated = TotalGenerated()
-        timeStart = time.process_time()
-        playerTwoMove = minimaxDecision(game, 4, totalGenerated)
-        timeEnd = time.process_time()
+        if firstMove:
+            playerTwoMove = p2_starting_move
+            firstMove = False
+        else:
+            timeStart = time.process_time()
+            playerTwoMove = minimaxDecision(game, 4, totalGenerated)
+            timeEnd = time.process_time()
         print("Player 2 has placed an O at %d,%d" % (playerTwoMove.row + 1, playerTwoMove.col + 1))
         print("Player 2 generated %d nodes during their minimax search" % (totalGenerated.count))
         print("Seconds For Move: %f" % (timeEnd - timeStart))
@@ -502,7 +505,7 @@ def playTicTacToe(game, starting_move):
 
 def main():
     game = Game()
-    playTicTacToe(game, Position(3, 4))
+    playTicTacToe(game, Position(3, 4), Position(3, 3))
 
 # Call to main
 main()
