@@ -328,8 +328,6 @@ class Game:
     # Returns a list of successors to this game object based on all the possible movements
     def generateSuccessors(self):
         positions_list = self.generatePossiblePlays()
-        # for p in positions_list:
-        #     print(p)
         successors = []
         for position in positions_list:
             successors.append(self.generateResultOfPlay(position))
@@ -377,7 +375,6 @@ class Game:
         # Negative sloped diagonal check - rule out if position in upper right and bottom left where these are impossible
         diag_val = r - c
         if diag_val < 2 and diag_val > -3:
-            # print("r: ", r, " c: ", c) *****
             friendly_tiles_in_row = 0
             # Count tiles in negative diagonal
             count_to = 4 if (diag_val == 1 or diag_val == -2) else 5
@@ -396,8 +393,6 @@ class Game:
 def minimaxDecision(game, maxDepth, totalGenerated):
     # generate list of possible positions to play
     positions_list = game.generatePossiblePlays()
-    # for p in positions_list:
-    #     print(p)
     # total nodes generated during this minimiax decision
     totalGenerated.count += len(positions_list)
     # run min-value function on each resulting game board generated from all possible actions
@@ -414,7 +409,6 @@ def minimaxDecision(game, maxDepth, totalGenerated):
 
 
 def minValue(game, callingPlayer, depth, maxDepth, totalGenerated):
-    # game.printBoard()  # temp print!
     # win check
     if game.winner is not None:
         if game.winner == callingPlayer:
@@ -436,7 +430,6 @@ def minValue(game, callingPlayer, depth, maxDepth, totalGenerated):
 
 
 def maxValue(game, callingPlayer, depth, maxDepth, totalGenerated):
-    #game.printBoard()  # temp print!
     # win check
     if game.winner is not None:
         if game.winner == callingPlayer:
@@ -461,6 +454,8 @@ def playTicTacToe(game, starting_move):
     play = True
     firstMove = True
     isWinner = False
+    timeStart = 0
+    timeEnd = 0
     while play:
         class TotalGenerated:
             def __init__(self):
@@ -471,23 +466,27 @@ def playTicTacToe(game, starting_move):
             playerOneMove = starting_move
             firstMove = False
         else:
+            timeStart = time.process_time()
             playerOneMove = minimaxDecision(game, 2, totalGenerated)
+            timeEnd = time.process_time()
         print("Player 1 placed an X at %d,%d" % (playerOneMove.row + 1, playerOneMove.col + 1))
         print("Player 1 generated %d nodes during their minimax search" % (totalGenerated.count))
+        print("Seconds For Move: %f" % (timeEnd - timeStart))
         isWinner = game.makePlay(playerOneMove)
-        game.printBoard() # temp print!
-        print(time.process_time())
+        game.printBoard()
         if isWinner:
             play = False
             print("Player 1 has won the game")
             break
         totalGenerated = TotalGenerated()
+        timeStart = time.process_time()
         playerTwoMove = minimaxDecision(game, 4, totalGenerated)
+        timeEnd = time.process_time()
         print("Player 2 has placed an O at %d,%d" % (playerTwoMove.row + 1, playerTwoMove.col + 1))
         print("Player 2 generated %d nodes during their minimax search" % (totalGenerated.count))
+        print("Seconds For Move: %f" % (timeEnd - timeStart))
         isWinner = game.makePlay(playerTwoMove)
-        game.printBoard()  # temp print!
-        print(time.process_time())
+        game.printBoard()
         if isWinner:
             play = False
             print("Player 2 has won the game")
@@ -496,16 +495,6 @@ def playTicTacToe(game, starting_move):
 def main():
     game = Game()
     playTicTacToe(game, Position(3, 4))
-    # print(game.makePlay(Position(1, 3)))
-    # print(game.makePlay(Position(5, 1)))
-    # print(game.makePlay(Position(2, 4)))
-    # print(game.makePlay(Position(5, 1)))
-    # print(game.makePlay(Position(3, 2)))
-    # print(game.makePlay(Position(5, 1)))
-    # print(game.makePlay(Position(4, 6)))
-    # print(game.makePlay(Position(5, 1)))
-    # print(game.getHeuristic())
-
 
 # Call to main
 main()
