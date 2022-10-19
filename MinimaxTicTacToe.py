@@ -136,7 +136,7 @@ class Game:
             print(row_string)
             print("_________________________")
 
-    def getHeuristic(self):
+    def getHeuristic(self, callingPlayer):
         twoSideOpen3InARowX = 0
         twoSideOpen3InARowO = 0
         oneSideOpen3InARowX = 0
@@ -315,7 +315,7 @@ class Game:
         # print("twoSideOpen2InARowO: " + str(twoSideOpen2InARowO))
         # print("oneSideOpen2InARowX: " + str(oneSideOpen2InARowX))
         # print("oneSideOpen2InARowO: " + str(oneSideOpen3InARowO))
-        if self.getCurrentPlayersTile() == Tile.X:
+        if callingPlayer == Player.PLAYER_1:
             return 200 * twoSideOpen3InARowX - 80 * twoSideOpen3InARowO + 150 * oneSideOpen3InARowX - 40 * oneSideOpen3InARowO + 20 * twoSideOpen2InARowX - 15 * twoSideOpen2InARowO + 5 * oneSideOpen2InARowX - 2 * oneSideOpen2InARowO
         return 200 * twoSideOpen3InARowO - 80 * twoSideOpen3InARowX + 150 * oneSideOpen3InARowO - 40 * oneSideOpen3InARowX + 20 * twoSideOpen2InARowO - 15 * twoSideOpen2InARowX + 5 * oneSideOpen2InARowO - 2 * oneSideOpen2InARowX
 
@@ -405,7 +405,7 @@ def minimaxDecision(game, maxDepth, totalGenerated):
     best_position_value = None
     for position in positions_list:
         result = minValue(game.generateResultOfPlay(position), game.current_players_turn, 1, maxDepth, totalGenerated)
-        if best_position_value is None or best_position_value > result:
+        if best_position_value is None or result > best_position_value:
             best_position = position
             best_position_value = result
     # return the action associated with the maximum evaluated value out of the min-value function calls
@@ -423,14 +423,14 @@ def minValue(game, callingPlayer, depth, maxDepth, totalGenerated):
             return -1000
     # cutoff depth
     if depth == maxDepth:
-        return game.getHeuristic()
+        return game.getHeuristic(callingPlayer)
     # generate successors list
     successors = game.generateSuccessors()
     totalGenerated.count += len(successors)
     value = None
     for successorGame in successors:
         result = maxValue(successorGame, callingPlayer, depth + 1, maxDepth, totalGenerated)
-        if value is None or value < result:
+        if value is None or result < value:
             value = result
     return value
 
@@ -445,14 +445,14 @@ def maxValue(game, callingPlayer, depth, maxDepth, totalGenerated):
             return -1000
     # cutoff depth
     if depth == maxDepth:
-        return game.getHeuristic()
+        return game.getHeuristic(callingPlayer)
     # generate successors list
     successors = game.generateSuccessors()
     totalGenerated.count += len(successors)
     value = None
     for successorGame in successors:
         result = minValue(successorGame, callingPlayer, depth + 1, maxDepth, totalGenerated)
-        if value is None or value > result:
+        if value is None or result > value:
             value = result
     return value
 
@@ -471,7 +471,7 @@ def playTicTacToe(game, starting_move):
             playerOneMove = starting_move
             firstMove = False
         else:
-            playerOneMove = minimaxDecision(game, 2, totalGenerated)
+            playerOneMove = minimaxDecision(game, 4, totalGenerated)
         print("Player 1 placed an X at %d,%d" % (playerOneMove.row + 1, playerOneMove.col + 1))
         print("Player 1 generated %d nodes during their minimax search" % (totalGenerated.count))
         isWinner = game.makePlay(playerOneMove)
@@ -482,7 +482,7 @@ def playTicTacToe(game, starting_move):
             print("Player 1 has won the game")
             break
         totalGenerated = TotalGenerated()
-        playerTwoMove = minimaxDecision(game, 4, totalGenerated)
+        playerTwoMove = minimaxDecision(game, 2, totalGenerated)
         print("Player 2 has placed an O at %d,%d" % (playerTwoMove.row + 1, playerTwoMove.col + 1))
         print("Player 2 generated %d nodes during their minimax search" % (totalGenerated.count))
         isWinner = game.makePlay(playerTwoMove)
