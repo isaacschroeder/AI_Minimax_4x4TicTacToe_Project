@@ -136,6 +136,8 @@ class Game:
             print(row_string)
             print("_________________________")
 
+    # getHeuristic() scans the game board for two in a row and three in a row sequences of Xs/Os with one or two sides open. Rows, columns,
+    # and both diagonal directions are scanned, and a heuristic value based on the counts is returned
     def getHeuristic(self, callingPlayer):
         twoSideOpen3InARowX = 0
         twoSideOpen3InARowO = 0
@@ -147,6 +149,9 @@ class Game:
         oneSideOpen2InARowO = 0
 
         toggle = 0
+        # first, the heuristic function scans each row for two in a row or three in a row sequences with one or two sides open,
+        # and increments the given counter accordingly; toggle is used to skip the next space in order to avoid repeating
+        # a three in a row as a two in a row
         for row in range(5):
             for col in range(5):
                 if (toggle > 0):
@@ -183,6 +188,9 @@ class Game:
                         elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row + 1, col + 3)) == Tile.PLAYABLE:
                             oneSideOpen2InARowX += 1
         toggle = 0
+        # next, the heuristic function scans each column for two in a row or three in a row sequences with one or two sides open,
+        # and increments the given counter accordingly; toggle is used to skip the next space in order to avoid repeating
+        # a three in a row as a two in a row
         for col in range(6):
             for row in range(4):
                 if (toggle > 0):
@@ -218,6 +226,10 @@ class Game:
                             twoSideOpen2InARowX += 1
                         elif lastTile == Tile.PLAYABLE or self.getPlayAt(Position(row + 3, col + 1)) == Tile.PLAYABLE:
                             oneSideOpen2InARowX += 1
+
+        # next, the heuristic function scans each left to right diagonal for two in a row or three in a row sequences with one or two sides open,
+        # and increments the given counter accordingly; a check array of position coordinates is used to avoid repeating a three in a row sequence as
+        # a two in a row
         check = []
         row = 0
         while row < 5:
@@ -263,6 +275,9 @@ class Game:
                 col += 1
             row += 1
 
+        # finally, the heuristic function scans each right to left diagonal for two in a row or three in a row sequences with one or two sides open,
+        # and increments the given counter accordingly; a check array of position coordinates is used to avoid repeating a three in a row sequence as
+        # a two in a row
         check = []
         row = 0
         while row < 5:
@@ -307,14 +322,7 @@ class Game:
                             oneSideOpen2InARowX += 1
                 col += 1
             row += 1
-        # print("twoSideOpen3InARowX: " + str(twoSideOpen3InARowX))
-        # print("twoSideOpen3InARowO: " + str(twoSideOpen3InARowO))
-        # print("oneSideOpen3InARowX: " + str(oneSideOpen3InARowX))
-        # print("oneSideOpen3InARowO: " + str(oneSideOpen3InARowO))
-        # print("twoSideOpen2InARowX: " + str(twoSideOpen2InARowX))
-        # print("twoSideOpen2InARowO: " + str(twoSideOpen2InARowO))
-        # print("oneSideOpen2InARowX: " + str(oneSideOpen2InARowX))
-        # print("oneSideOpen2InARowO: " + str(oneSideOpen3InARowO))
+        # the necessary value is computed based on the calling player and returned to the calling function
         if callingPlayer == Player.PLAYER_1:
             return 200 * twoSideOpen3InARowX - 80 * twoSideOpen3InARowO + 150 * oneSideOpen3InARowX - 40 * oneSideOpen3InARowO + 20 * twoSideOpen2InARowX - 15 * twoSideOpen2InARowO + 5 * oneSideOpen2InARowX - 2 * oneSideOpen2InARowO
         return 200 * twoSideOpen3InARowO - 80 * twoSideOpen3InARowX + 150 * oneSideOpen3InARowO - 40 * oneSideOpen3InARowX + 20 * twoSideOpen2InARowO - 15 * twoSideOpen2InARowX + 5 * oneSideOpen2InARowO - 2 * oneSideOpen2InARowX
